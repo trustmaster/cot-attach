@@ -1,4 +1,5 @@
 <!-- BEGIN: MAIN -->
+<div class="col first content">
 
 <!-- BEGIN: USERSPACE -->
 <div class="box">
@@ -49,4 +50,5 @@
 {ADMIN_REMOVE}
 <!-- END: ADMIN -->
 
+</div>
 <!-- END: MAIN -->

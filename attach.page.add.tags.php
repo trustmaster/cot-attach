@@ -2,31 +2,20 @@
 /* ====================
 Copyright (c) 2008, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
-[BEGIN_SED]
-File=plugins/attach/attach.page.add.tags.php
-Version=121
-Updated=2008-jan-30
-Type=Plugin
-Author=Trustmaster
-Description=
-[END_SED]
 
-[BEGIN_SED_EXTPLUGIN]
-Code=attach
-Part=page.add.tags
-File=attach.page.add.tags
+[BEGIN_COT_EXT]
 Hooks=page.add.tags
 Tags=page.add.tpl:{PAGEADD_ATTACH}
 Order=10
-[END_SED_EXTPLUGIN]
+[END_COT_EXT]
 ==================== */
-if (!defined('SED_CODE')) { die('Wrong URL.'); }
+defined('COT_CODE') or die('Wrong URL.');
 
-if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
+if($cfg['plugin']['attach']['pages'] && cot_auth('plug', 'attach', 'W'))
 {
-	require_once($cfg['plugins_dir'].'/attach/inc/functions.php');
+	require_once cot_incfile('attach', 'plug');
 
-	$t1 = new XTemplate(sed_skinfile('attach.page.add', true));
+	$t1 = new XTemplate(cot_tplfile('attach.page.add', 'plug'));
 	
 	$limits = att_get_limits();
 	$t1->assign(array(
@@ -34,7 +23,7 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 		'ATTACH_TOTALSPACE' => $limits['total'],
 		'ATTACH_USEDSPACE' => $limits['used'],
 		'ATTACH_LEFTSPACE' => $limits['left'],
-		'ATTACH_PERSURL' => sed_url('plug', 'o=attach&uid='.$usr['id'])
+		'ATTACH_PERSURL' => cot_url('plug', 'e=attach&uid='.$usr['id'])
 	));
 	
 	for($i = 0; $i < $cfg['plugin']['attach']['items']; $i++)

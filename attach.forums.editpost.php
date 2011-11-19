@@ -3,22 +3,18 @@
 Copyright (c) 2008-2009, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
 
-[BEGIN_SED_EXTPLUGIN]
-Code=attach
-Part=forums.editpost
-File=attach.forums.editpost
+[BEGIN_COT_EXT]
 Hooks=forums.editpost.update.done
-Tags=
 Order=99
-[END_SED_EXTPLUGIN]
+[END_COT_EXT]
 ==================== */
-if (!defined('SED_CODE')) { die('Wrong URL.'); }
+defined('COT_CODE') or die('Wrong URL.');
 
 // Notice that the order of 99 is neaded because we modify headers to transfer error message
 
-if($cfg['plugin']['attach']['forums'] && sed_auth('plug', 'attach', 'W'))
+if($cfg['plugin']['attach']['forums'] && cot_auth('plug', 'attach', 'W'))
 {
-	require_once($cfg['plugins_dir'].'/attach/inc/functions.php');
+	require_once cot_incfile('attach', 'plug');
 
 	$i = 0;
 	$err_url = '';
@@ -28,7 +24,7 @@ if($cfg['plugin']['attach']['forums'] && sed_auth('plug', 'attach', 'W'))
 		{
 			if(empty($_POST["att_title_{$mt[1]}"]))
 			{
-				$att_name = $_FILES[$key]['name'];
+				$att_name = att_filter($_FILES[$key]['name']);
 				if(!empty($att_name)) $att_title = $att_name;
 				else $att_title = $L['att_title']; 
 			}
@@ -66,7 +62,7 @@ if($cfg['plugin']['attach']['forums'] && sed_auth('plug', 'attach', 'W'))
 			{
 				if(empty($_POST["att_title{$mt[1]}"]))
 				{
-					$att_name = $_FILES[$key]['name'];
+					$att_name = att_filter($_FILES[$key]['name']);
 					if(!empty($att_name)) $att_title = $att_name;
 					else $att_title = $L['att_title']; 
 				}
@@ -81,9 +77,8 @@ if($cfg['plugin']['attach']['forums'] && sed_auth('plug', 'attach', 'W'))
 	// If there were errors, get back
 	if(!empty($err_url))
 	{
-		sed_forum_sectionsetlast($fp_sectionid);
-		header('Location: ' . SED_ABSOLUTE_URL . sed_url('forums', "m=editpost&s=$s&q=$q&p=$p&".sed_xg().$err_url, '', true));
-		exit;
+		cot_forum_sectionsetlast($fp_sectionid);
+		cot_redirect(cot_url('forums', "m=editpost&s=$s&q=$q&p=$p&".cot_xg().$err_url, '', true));
 	}
 }
 ?>

@@ -3,24 +3,21 @@
 Copyright (c) 2008-2009, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
 
-[BEGIN_SED_EXTPLUGIN]
-Code=attach
-Part=page.edit
-File=attach.page.edit
+[BEGIN_COT_EXT]
 Hooks=page.edit.update.done
 Tags=
 Order=99
-[END_SED_EXTPLUGIN]
+[END_COT_EXT]
 ==================== */
-if (!defined('SED_CODE')) { die('Wrong URL.'); }
+defined('COT_CODE') or die('Wrong URL.');
 
 // Notice that the order of 99 is neaded because we modify headers to transfer error message
 
-if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
+if($cfg['plugin']['attach']['pages'] && cot_auth('plug', 'attach', 'W'))
 {
 
 	$item_id = $id;
-	require_once($cfg['plugins_dir'].'/attach/inc/functions.php');
+	require_once cot_incfile('attach', 'plug');
 
 	$i = 0;
 	$err_url = '';
@@ -30,7 +27,7 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 		{
 			if(empty($_POST["att_title_{$mt[1]}"]))
 			{
-				$att_name = $_FILES[$key]['name'];
+				$att_name = cot_import($_FILES[$key]['name'], 'D', 'TXT');
 				if(!empty($att_name)) $att_title = $att_name;
 				else $att_title = $L['att_title']; 
 			}
@@ -51,7 +48,7 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 			elseif($_POST["att_rpl_{$mt[1]}"] && $_POST["att_del_{$mt[1]}"] && !empty($val['tmp_name']) && $val['size'] > 0)
 			{
 				// Remove and replace
-				if(!att_remove($mt[1]) || $err = att_add('pag', $id, crc32(sed_sql_prep($rpagecat)), $key, $att_title))
+				if(!att_remove($mt[1]) || $err = att_add('pag', $id, crc32($db->prep($rpage['page_cat'])), $key, $att_title))
 					$err_url .= "&err$i=replace";
 			}
 			else
@@ -68,12 +65,12 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 			{
 				if(empty($_POST["att_title{$mt[1]}"]))
 				{
-					$att_name = att_filter($_FILES[$key]['name']);
+					$att_name = cot_import($_FILES[$key]['name'], 'D', 'TXT');
 					if(!empty($att_name)) $att_title = $att_name;
 					else $att_title = $L['att_title']; 
 				}
 				else $att_title = $_POST["att_title{$mt[1]}"];
-				if($err = att_add('pag', $id, crc32(sed_sql_prep($rpagecat)), $key, $att_title))
+				if($err = att_add('pag', $id, crc32($db->prep($rpage['page_cat'])), $key, $att_title))
 					$err_url .= "&err$i=".$err;
 			}
 		}
@@ -83,8 +80,8 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 	// If there were errors, get back
 	if(!empty($err_url))
 	{
-		sed_log("Edited page #".$id,'adm');
-		header('Location: ' . SED_ABSOLUTE_URL . sed_url('page', "id=$id&m=edit&r=list&".sed_xg().$err_url, '', true));
+		cot_log("Edited page #".$id,'adm');
+		cot_redirect(cot_url('page', "id=$id&m=edit&r=list&".cot_xg().$err_url, '', true));
 		exit;
 	}
 }

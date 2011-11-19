@@ -3,7 +3,7 @@
 Copyright (c) 2008-2009, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
 
-[BEGIN_SED_EXTPLUGIN]
+[BEGIN_COT_EXT]
 Code=attach
 Name=File Attachments
 Description=Attach files to posts and pages
@@ -17,9 +17,9 @@ Auth_guests=R1
 Lock_guests=W2345A
 Auth_members=RW1
 Lock_members=2345
-[END_SED_EXTPLUGIN]
+[END_COT_EXT]
 
-[BEGIN_SED_EXTPLUGIN_CONFIG]
+[BEGIN_COT_EXT_CONFIG]
 folder=01:string::datas/users:Directory for files
 prefix=02:string::att_:File prefix
 exts=03:string::gif,jpg,jpeg,png,zip,rar,7z,gz,bz2,pdf,djvu,mp3,ogg,wma,avi,divx,mpg,mpeg,swf,txt:Allowed extensions (comma separated, no dots and spaces)
@@ -35,16 +35,9 @@ userdir=14:radio::0:Enable files in user subdirectories?
 prev_x=15:string::160:Showcase preview image width
 prev_y=16:string::160:Showcase preview image height
 prev_border=17:string::0:Showcase preview image border
-[END_SED_EXTPLUGIN_CONFIG]
+[END_COT_EXT_CONFIG]
 ==================== */
 
-if ( !defined('SED_CODE') ) { die("Wrong URL."); }
-
-if($action == 'install')
-{
-	require_once($cfg['plugins_dir'].'/attach/inc/functions.php');
-
-	att_install();
-}
+defined('COT_CODE') or die('Wrong URL');
 
 ?>

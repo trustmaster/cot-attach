@@ -3,22 +3,19 @@
 Copyright (c) 2008-2009, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
 
-[BEGIN_SED_EXTPLUGIN]
-Code=attach
-Part=page.edit.tags
-File=attach.page.edit.tags
+[BEGIN_COT_EXT]
 Hooks=page.edit.tags
 Tags=page.edit.tpl:{PAGEEDIT_ATTACH}
 Order=10
-[END_SED_EXTPLUGIN]
+[END_COT_EXT]
 ==================== */
-if (!defined('SED_CODE')) { die('Wrong URL.'); }
+defined('COT_CODE') or die('Wrong URL.');
 
-if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
+if($cfg['plugin']['attach']['pages'] && cot_auth('plug', 'attach', 'W'))
 {
-	require_once($cfg['plugins_dir'].'/attach/inc/functions.php');
+	require_once cot_incfile('attach', 'plug');
 
-	$t1 = new XTemplate(sed_skinfile('attach.page.edit', true));
+	$t1 = new XTemplate(cot_tplfile('attach.page.edit', 'plug'));
 	
 	$limits = att_get_limits();
 	$t1->assign(array(
@@ -26,13 +23,13 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 		'ATTACH_TOTALSPACE' => $limits['total'],
 		'ATTACH_USEDSPACE' => $limits['used'],
 		'ATTACH_LEFTSPACE' => $limits['left'],
-		'ATTACH_PERSURL' => sed_url('plug', 'o=attach&uid='.$usr['id'])
+		'ATTACH_PERSURL' => cot_url('plug', 'e=attach&uid='.$usr['id'])
 	));
 	
 	$err_msg = '';
 	for($i = 0; $i < $cfg['plugin']['attach']['items']; $i++)
 	{
-		$err = sed_import("err$i", 'G', 'ALP');
+		$err = cot_import("err$i", 'G', 'ALP');
 		if(!empty($err)) $err_msg .= $L["att_err_$err"].'<br />';
 	}
 	if(!empty($err_msg))
@@ -54,11 +51,11 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 			$att_order = '';
 	}
 	
-	$att_sql = sed_sql_query("SELECT att_id, att_path, att_title
+	$att_sql = $db->query("SELECT att_id, att_path, att_title
 		FROM $db_attach WHERE att_type = 'pag' AND att_item = $id
 		ORDER BY$att_order att_id ASC");
 	$i = 0;
-	while($att = sed_sql_fetcharray($att_sql))
+	while($att = $att_sql->fetch())
 	{
 		$t1->assign(array(
 			'ATTACH_ROW_CAPTION' => "att_title_{$att['att_id']}",
@@ -88,7 +85,7 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'W'))
 		$t1->parse('MAIN.ATTACH_ROW');
 		$pos++;
 	}
-	sed_sql_freeresult($att_sql);
+	$att_sql = null;
 
 	$t1->parse('MAIN');
 	

@@ -3,20 +3,17 @@
 Copyright (c) 2008-2009, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
 
-[BEGIN_SED_EXTPLUGIN]
-Code=attach
-Part=page
-File=attach.page
+[BEGIN_COT_EXT]
 Hooks=page.tags
 Tags=page.tpl:{PAGE_ATTACH}
 Order=10
-[END_SED_EXTPLUGIN]
+[END_COT_EXT]
 ==================== */
-if (!defined('SED_CODE')) { die('Wrong URL.'); }
+defined('COT_CODE') or die('Wrong URL');
 
-if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'R'))
+if($cfg['plugin']['attach']['pages'] && cot_auth('plug', 'attach', 'R'))
 {
-	require_once($cfg['plugins_dir'].'/attach/inc/functions.php');
+	require_once cot_incfile('attach', 'plug');
 
 	$att_order = '';
 	switch($cfg['plugin']['attach']['order'])
@@ -32,16 +29,16 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'R'))
 		break;
 	}
 
-	$t1 = new XTemplate(sed_skinfile('attach.page', true));
+	$t1 = new XTemplate(cot_tplfile('attach.page', 'plug'));
 	
-	$att_sql = sed_sql_query("SELECT att_id, att_path, att_ext, att_img, att_size, att_title, att_count
+	$att_sql = $db->query("SELECT att_id, att_path, att_ext, att_img, att_size, att_title, att_count
 		FROM $db_attach WHERE att_type = 'pag' AND att_item = {$pag['page_id']}
 		ORDER BY$att_order att_id ASC");
-	while($att = sed_sql_fetcharray($att_sql))
+	while($att = $att_sql->fetch())
 	{
 
 		$t1->assign(array(
-			'ATTACH_URL' => sed_url('plug', 'o=attach&id='.$att['att_id']),
+			'ATTACH_URL' => cot_url('plug', 'e=attach&id='.$att['att_id']),
 			'ATTACH_ICON' => file_exists("images/pfs/{$att['att_ext']}.gif") ? "images/pfs/{$att['att_ext']}.gif" : 'images/pfs/zip.gif',
 			'ATTACH_SIZE' => round($att['att_size'] / 1024, 1),
 			'ATTACH_CAPTION' => $att['att_title'],
@@ -58,7 +55,7 @@ if($cfg['plugin']['attach']['pages'] && sed_auth('plug', 'attach', 'R'))
 		}
 		$t1->parse('MAIN.ATTACH');
 	}
-	sed_sql_freeresult($att_sql);
+	$att_sql = null;
 
 	$t1->parse('MAIN');
 

@@ -4,7 +4,7 @@
 
 <!-- BEGIN: ATTACH_IMAGE -->
 <a href="{ATTACH_URL}" title="{ATTACH_CAPTION} | {ATTACH_HITS} hits" target="_blank">
-<img src="{ATTACH_THUMB}" alt="" /></a>
+<img src="{ATTACH_THUMB}" alt="{ATTACH_CAPTION}" /></a>
 <!-- END: ATTACH_IMAGE -->
 
 <!-- BEGIN: ATTACH_FILE -->

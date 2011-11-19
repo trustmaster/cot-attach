@@ -2,14 +2,6 @@
 /* ====================
 Copyright (c) 2008-2009, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
-[BEGIN_SED]
-File=plugins/attach/lang/attach.ru.lang.php
-Version=121
-Updated=2008-jan-28
-Type=Language file
-Author=Trustmaster
-Description=
-[END_SED]
 ==================== */
 
 $L['att_attach'] = 'Прикрепить файл';

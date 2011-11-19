@@ -3,24 +3,20 @@
 Copyright (c) 2008-2009, Vladimir Sibirov.
 All rights reserved. Distributed under BSD License.
 
-[BEGIN_SED_EXTPLUGIN]
-Code=attach
-Part=forums.newtopic
-File=attach.forums.newtopic
+[BEGIN_COT_EXT]
 Hooks=forums.newtopic.newtopic.done
-Tags=
 Order=99
-[END_SED_EXTPLUGIN]
+[END_COT_EXT]
 ==================== */
-if (!defined('SED_CODE')) { die('Wrong URL.'); }
+defined('COT_CODE') or die('Wrong URL.');
 
 $item_id = $p;
 
-// Notice that the order of 99 is neaded because we modify $q to transfer error message
+// Notice that the order of 99 is needed because we modify $q to transfer error message
 
-if($cfg['plugin']['attach']['forums'] && sed_auth('plug', 'attach', 'W'))
+if($cfg['plugin']['attach']['forums'] && cot_auth('plug', 'attach', 'W'))
 {
-	require_once($cfg['plugins_dir'].'/attach/inc/functions.php');
+	require_once cot_incfile('attach', 'plug');
 
 	$err_url = '';
 	for($i = 0; $i < $cfg['plugin']['attach']['items']; $i++)
@@ -29,7 +25,7 @@ if($cfg['plugin']['attach']['forums'] && sed_auth('plug', 'attach', 'W'))
 		{
 			if(empty($_POST["att_title$i"]))
 			{
-				$att_name = $_FILES["att_file$i"]['name'];
+				$att_name = cot_import($_FILES["att_file$i"]['name'], 'D', 'TXT');
 				if(!empty($att_name)) $att_title = $att_name;
 				else $att_title = $L['att_title']; 
 			}
