@@ -35,6 +35,7 @@ if(cot_auth('plug', 'attach', 'R'))
 			$att = $sql->fetch();
 			att_inc_count($id);
 			header('Location: '.$abs_url.$att['att_path']);
+			exit;
 		}
 	}
 	elseif($q > 0 || $uid > 0)

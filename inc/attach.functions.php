@@ -85,7 +85,7 @@ function att_add($type, $item_id, $parent_id, $var_name, $title)
 			}
 			else $path = $cfg['plugin']['attach']['folder'].'/'.$cfg['plugin']['attach']['prefix'].$id.$tar.'.'.$ext;
 			move_uploaded_file($_FILES[$var_name]['tmp_name'], $path);
-			$db->update($db_attach, "att_id = $id", array('att_path' => $path));
+			$db->update($db_attach, array('att_path' => $path), "att_id = $id");
 			if($img)
 			{
 				if(!att_create_thumb($path))
@@ -203,7 +203,7 @@ function att_update($id, $var_name, $title = '')
 		if (!empty($title)) $ratt['att_title'] = $title;
 		$db->update($db_attach, $ratt, "att_id = $id");
 		$error_info = $db->errorInfo();
-		if($error_info[1]() > 0)
+		if($error_info[1] > 0)
 			$err = $L['att_err_db'].': '.$error_info[2]();
 		if($img)
 		{
