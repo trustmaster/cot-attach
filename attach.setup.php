@@ -17,6 +17,7 @@ Auth_guests=R1
 Lock_guests=W2345A
 Auth_members=RW1
 Lock_members=2345
+Requires_modules=pfs
 [END_COT_EXT]
 
 [BEGIN_COT_EXT_CONFIG]
